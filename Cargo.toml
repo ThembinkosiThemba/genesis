@@ -1,0 +1,13 @@
+[package]
+name = "genesis"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = "3.0"
+git2 = "0.13"
+dialoguer = "0.10.0"
+colored = "2.0"
+console = "0.15.0"
+dotenv = "0.15.0"
+indicatif = "0.16.2"
