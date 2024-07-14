@@ -144,7 +144,6 @@ fn print_banner() {
 }
 
 fn clone_repo(url: &str, path: &str) -> Result<Repository, git2::Error> {
-    // let token = "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";
     let token = env::var("GITHUB_TOKEN").expect("Github token not set");
 
     let pb = Rc::new(RefCell::new(ProgressBar::new(100)));
