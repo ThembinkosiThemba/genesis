@@ -141,6 +141,7 @@ fn print_banner() {
 }
 
 fn clone_repo(url: &str, path: &str) -> Result<Repository, git2::Error> {
+    let token = "";
     let pb = Rc::new(RefCell::new(ProgressBar::new(100)));
     pb.borrow_mut().set_style(
         ProgressStyle::default_bar()
@@ -154,7 +155,7 @@ fn clone_repo(url: &str, path: &str) -> Result<Repository, git2::Error> {
 
     let mut callbacks = RemoteCallbacks::new();
     callbacks.credentials(move |_url, _username_from_url, _allowed_types| {
-        Cred::userpass_plaintext("git", &"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")
+        Cred::userpass_plaintext("git", &token)
     });
 
     callbacks.transfer_progress(move |stats: Progress| {
