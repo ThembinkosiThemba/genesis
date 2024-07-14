@@ -11,6 +11,9 @@ use std::rc::Rc;
 
 use std::process::Command;
 
+const RUST_URL: &str = "https://github.com/ThembinkosiThemba/rust-project-starter.git";
+const GO_URL: &str = "https://github.com/ThembinkosiThemba/go-project-starter.git";
+
 fn print_banner() {
     println!("{}", "\n".repeat(2));
     println!(
@@ -155,7 +158,8 @@ fn setup_go_project() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("{}", style("Cloning repository...").cyan());
     let _repo = clone_repo(
-        "https://github.com/ThembinkosiThemba/go-project-starter.git",
+        // "https://github.com/ThembinkosiThemba/go-project-starter.git",
+        GO_URL,
         "go-project",
     )?;
 
@@ -178,7 +182,8 @@ fn setup_rust_project() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("{}", style("Cloning repository...").cyan());
     let _repo = clone_repo(
-        "https://github.com/yourusername/private-rust-starter.git",
+        // "https://github.com/yourusername/private-rust-starter.git",
+        RUST_URL,
         "rust-project",
     )?;
 

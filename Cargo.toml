@@ -1,7 +1,17 @@
 [package]
 name = "genesis"
 version = "0.1.0"
+authors = ["Thembinkosi Mkhonta (thembinkosimkhonta01@gmail.com)"]
 edition = "2021"
+
+description = ""
+license = "MIT"
+homepage = ""
+repository = "https://github.com/ThembinkosiThemba/genesis"
+readme = "README.md"
+keywords = ["rust", "genesis"]
+categories = ["development-toolkit"]
+include = ["src/**/*.rs", "Cargo.toml", "README.md"]
 
 [dependencies]
 clap = "3.0"
