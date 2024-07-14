@@ -8,7 +8,7 @@ use git2::{build::RepoBuilder, Cred, FetchOptions, Progress, RemoteCallbacks, Re
 use indicatif::{ProgressBar, ProgressStyle};
 use std::{
     cell::RefCell,
-    env, fs,
+    fs,
     io::{Error as IoError, Read, Write},
     path::Path,
     process::Command,
@@ -16,9 +16,6 @@ use std::{
 };
 use toml_edit::{Document, Item};
 use walkdir::WalkDir;
-
-const RUST_URL: &str = "https://github.com/ThembinkosiThemba/rust-project-starter.git";
-const GO_URL: &str = "https://github.com/ThembinkosiThemba/go-project-starter.git";
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok(); // Load .env file
@@ -144,8 +141,6 @@ fn print_banner() {
 }
 
 fn clone_repo(url: &str, path: &str) -> Result<Repository, git2::Error> {
-    let token = env::var("GITHUB_TOKEN").expect("Github token not set");
-
     let pb = Rc::new(RefCell::new(ProgressBar::new(100)));
     pb.borrow_mut().set_style(
         ProgressStyle::default_bar()
@@ -159,7 +154,7 @@ fn clone_repo(url: &str, path: &str) -> Result<Repository, git2::Error> {
 
     let mut callbacks = RemoteCallbacks::new();
     callbacks.credentials(move |_url, _username_from_url, _allowed_types| {
-        Cred::userpass_plaintext("git", &token)
+        Cred::userpass_plaintext("git", &"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")
     });
 
     callbacks.transfer_progress(move |stats: Progress| {
@@ -350,3 +345,6 @@ fn update_cargo_toml(
     println!("Updated project name in Cargo.toml");
     Ok(())
 }
+
+const RUST_URL: &str = "https://github.com/ThembinkosiThemba/rust-project-starter.git";
+const GO_URL: &str = "https://github.com/ThembinkosiThemba/go-project-starter.git";
