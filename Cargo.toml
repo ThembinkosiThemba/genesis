@@ -21,6 +21,8 @@ console = "0.15.0"
 dotenv = "0.15.0"
 indicatif = "0.16.2"
 dirs = "4.0"
+walkdir = "2.3"
+toml_edit = "0.19"
 
 [[bin]]
 name = "genesis"
