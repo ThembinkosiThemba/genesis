@@ -10,7 +10,6 @@ homepage = "https://github.com/ThembinkosiThemba/genesis"
 repository = "https://github.com/ThembinkosiThemba/genesis"
 readme = "README.md"
 keywords = ["rust", "genesis"]
-categories = ["development-toolkit"]
 include = ["src/**/*.rs", "Cargo.toml", "README.md"]
 
 [dependencies]
