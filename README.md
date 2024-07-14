@@ -1,7 +1,3 @@
-Certainly! Here is an updated version of the README file based on the provided program:
-
----
-
 <h2 align="center">Genesis 🌱</h1>
 <h3 align="center">Genesis is a powerful, flexible, and user-friendly project starter tool designed for Go and Rust developers. It streamlines the initial setup process, allowing developers to focus on what truly matters: building great applications and solving business problems.</h3>
 
@@ -108,7 +104,3 @@ If you have any questions or need support, feel free to:
 
 - Open an issue on GitHub
 - Reach out to the maintainer: [Thembinkosi Mkhonta](https://github.com/ThembinkosiThemba)
-
----
-
-This README update aligns with the features and functionality described in your program, providing clear instructions and an engaging overview for potential users.
