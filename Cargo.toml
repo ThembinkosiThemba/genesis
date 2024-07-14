@@ -14,7 +14,7 @@ include = ["src/**/*.rs", "Cargo.toml", "README.md"]
 
 [dependencies]
 clap = { version = "3.0", features = ["derive"] }
-git2 = "0.13"
+git2 = "0.16"
 dialoguer = "0.10.0"
 colored = "2.0"
 console = "0.15.0"
