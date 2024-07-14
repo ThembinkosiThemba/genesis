@@ -1,6 +1,6 @@
 [package]
 name = "genesis"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Thembinkosi Mkhonta (thembinkosimkhonta01@gmail.com)"]
 edition = "2021"
 
@@ -14,10 +14,15 @@ categories = ["development-toolkit"]
 include = ["src/**/*.rs", "Cargo.toml", "README.md"]
 
 [dependencies]
-clap = "3.0"
+clap = { version = "3.0", features = ["derive"] }
 git2 = "0.13"
 dialoguer = "0.10.0"
 colored = "2.0"
 console = "0.15.0"
 dotenv = "0.15.0"
 indicatif = "0.16.2"
+dirs = "4.0"
+
+[[bin]]
+name = "genesis"
+path = "src/main.rs"

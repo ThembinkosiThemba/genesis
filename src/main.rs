@@ -2,6 +2,7 @@ use clap::{App, Arg};
 use colored::*;
 use console::{style, Term};
 use dialoguer::{theme::ColorfulTheme, Select};
+use dirs::desktop_dir;
 use dotenv::dotenv;
 use git2::{build::RepoBuilder, Cred, FetchOptions, Progress, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
@@ -122,9 +123,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok(); // Load .env file
     print_banner();
 
+    let default_path = desktop_dir()
+        .expect("could not find desktop directory")
+        .to_str()
+        .expect("Desktop path is not valid UTF-8")
+        .to_string();
+
     let matches = App::new("Genesis")
-        .version("1.0")
-        .author("Your Name")
+        .version("1.0.0")
+        .author("Thembinkosi Mkhonta")
         .about("Sets up starter projects for Go or Rust")
         .arg(
             Arg::new("language")
@@ -134,6 +141,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .help("Sets the project language (go or rust)")
                 .takes_value(true),
         )
+        .arg(
+            Arg::new("path")
+                .short('p')
+                .long("path")
+                .value_name("PATH")
+                .help("Sets the path where the project will be cloned")
+                .default_value(&default_path)
+                .takes_value(true),
+        )
         .get_matches();
 
     let language = match matches.value_of("language") {
@@ -141,9 +157,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         None => get_language_selection()?,
     };
 
+    let path = matches.value_of("path").unwrap().to_string();
+    let project_name = get_project_name(&language)?;
+
     match language.as_str() {
-        "go" => setup_go_project()?,
-        "rust" => setup_rust_project()?,
+        "go" => setup_go_project(&path, &project_name)?,
+        "rust" => setup_rust_project(&path, &project_name)?,
         _ => println!(
             "{}",
             style(format!("Unsupported language: {}", language)).red()
@@ -153,21 +172,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn setup_go_project() -> Result<(), Box<dyn std::error::Error>> {
+fn get_project_name(language: &str) -> Result<String, Box<dyn std::error::Error>> {
+    let project_name = dialoguer::Input::<String>::new()
+        .with_prompt(format!("Enter your {} project name", language))
+        .interact_text()?;
+    Ok(project_name)
+}
+
+fn setup_go_project(base_path: &str, project_name: &str) -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", style("Setting up Go project...").yellow());
 
-    println!("{}", style("Cloning repository...").cyan());
-    let _repo = clone_repo(
-        // "https://github.com/ThembinkosiThemba/go-project-starter.git",
-        GO_URL,
-        "go-project",
-    )?;
+    let project_path = Path::new(base_path).join(project_name);
+    println!(
+        "{}",
+        style(format!(
+            "Cloning repository to {}...",
+            project_path.display()
+        ))
+        .cyan()
+    );
+
+    let _repo = clone_repo(GO_URL, project_path.to_str().unwrap())?;
 
     println!("{}", style("Running setup commands...").cyan());
     Command::new("go")
         .arg("mod")
         .arg("tidy")
-        .current_dir("go-project")
+        .current_dir(project_path)
         .status()?;
 
     println!(
@@ -177,20 +208,28 @@ fn setup_go_project() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn setup_rust_project() -> Result<(), Box<dyn std::error::Error>> {
+fn setup_rust_project(
+    base_path: &str,
+    project_name: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", style("Setting up Rust project...").yellow());
 
-    println!("{}", style("Cloning repository...").cyan());
-    let _repo = clone_repo(
-        // "https://github.com/yourusername/private-rust-starter.git",
-        RUST_URL,
-        "rust-project",
-    )?;
+    let project_path = Path::new(base_path).join(project_name);
+    println!(
+        "{}",
+        style(format!(
+            "Cloning repository to {}...",
+            project_path.display()
+        ))
+        .cyan()
+    );
+
+    let _repo = clone_repo(RUST_URL, project_path.to_str().unwrap())?;
 
     println!("{}", style("Running setup commands...").cyan());
     Command::new("cargo")
         .arg("build")
-        .current_dir("rust-project")
+        .current_dir(project_path)
         .status()?;
 
     println!(
