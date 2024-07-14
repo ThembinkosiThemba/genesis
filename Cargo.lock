@@ -189,7 +189,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "genesis"
+name = "genesis_rs"
 version = "1.0.0"
 dependencies = [
  "clap",
