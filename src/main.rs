@@ -154,7 +154,7 @@ fn clone_repo(url: &str, path: &str) -> Result<Repository, git2::Error> {
 
     let mut callbacks = RemoteCallbacks::new();
     callbacks.credentials(move |_url, _username_from_url, _allowed_types| {
-        Cred::userpass_plaintext("git", &"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")
+        Cred::userpass_plaintext("git", &"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")
     });
 
     callbacks.transfer_progress(move |stats: Progress| {
