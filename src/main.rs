@@ -96,10 +96,13 @@ fn prompt_step<T>(
     prompt: &str,
     input_fn: impl FnOnce() -> Result<T, Box<dyn std::error::Error>>,
 ) -> Result<T, Box<dyn std::error::Error>> {
-    term.clear_last_lines(2)?; // Clear the previous question
+    term.clear_last_lines(2)?;
     println!("{}", style(prompt).cyan().bold());
     let result = input_fn()?;
-    term.clear_last_lines(1)?; // Clear the input line
+    term.clear_last_lines(1)?;
+    println!();
+    println!();
+
     println!("{} {}", style("✓").green().bold(), style(prompt).dim());
     Ok(result)
 }
@@ -196,6 +199,7 @@ fn setup_go_project(
     module_name: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", style("Setting up Go project...").yellow());
+    println!();
 
     let project_path = Path::new(base_path).join(project_name);
     println!(
@@ -206,6 +210,7 @@ fn setup_go_project(
         ))
         .cyan()
     );
+    println!();
 
     let _repo = clone_repo(GO_URL, project_path.to_str().unwrap())?;
 
@@ -224,6 +229,7 @@ fn setup_go_project(
         .arg("tidy")
         .current_dir(&project_path)
         .status()?;
+    println!();
 
     println!(
         "{}",
@@ -246,7 +252,8 @@ fn update_module_name(
             match update_file_content(path, old_module_name, new_module_name) {
                 Ok(updated) => {
                     if updated {
-                        println!("Updated module name in: {}", path.display());
+                        // println!("Updated module name in: {}", path.display());
+                        println!();
                     }
                 }
                 Err(e) => println!("Error updating file {}: {}", path.display(), e),
@@ -296,6 +303,7 @@ fn setup_rust_project(
     project_name: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", style("Setting up Rust project...").yellow());
+    println!();
 
     let project_path = Path::new(base_path).join(project_name);
     println!(
@@ -307,6 +315,8 @@ fn setup_rust_project(
         .cyan()
     );
 
+    println!();
+
     println!(
         "{}",
         style(format!(
@@ -314,6 +324,8 @@ fn setup_rust_project(
         ))
         .yellow()
     );
+
+    println!();
 
     let _repo = clone_repo(RUST_URL, project_path.to_str().unwrap())?;
 
@@ -351,7 +363,8 @@ fn update_cargo_toml(
     let mut file = fs::File::create(&cargo_toml_path)?;
     file.write_all(updated_content.as_bytes())?;
 
-    println!("Updated project name in Cargo.toml");
+    // println!("Updated project name in Cargo.toml");
+    println!("{}", style("Updated project name in Cargo.toml!").green());
     Ok(())
 }
 

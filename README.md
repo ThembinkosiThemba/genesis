@@ -2,7 +2,7 @@
 <h3 align="center">Genesis is a powerful, flexible, and user-friendly project starter tool designed for Go and Rust developers. It streamlines the initial setup process, allowing developers to focus on what truly matters: building great applications and solving business problems.</h3>
 
 <p align="center">
-    <img src="./genesis.png" alt="genesis" />
+    <img src="./src/genesis.png" alt="genesis" />
 </p>
 
 ## 🌟 Features
