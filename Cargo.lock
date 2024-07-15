@@ -206,6 +206,7 @@ dependencies = [
  "dotenv",
  "git2",
  "indicatif",
+ "regex",
  "toml_edit",
  "walkdir",
 ]

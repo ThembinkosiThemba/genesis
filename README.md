@@ -7,7 +7,7 @@
 
 ## 🌟 Features
 
-- **Quick Setup**: Rapidly initialize Go and Rust projects with best practices in them
+- **Quick Setup**: Rapidly initialize Go and Rust projects allowing you to select the database of your choice
 - **Interactive CLI**: User-friendly command-line interface for easy project configuration
 - **Language Selection**: Support for Go and Rust, with room for expansion
 - **Customizable Paths**: Flexibly set project locations
@@ -33,7 +33,7 @@ By handling the initial setup, Genesis allows developers to immediately dive int
 Install Genesis using Cargo, the Rust package manager:
 
 ```bash
-cargo install genesis
+cargo install genesis_rs
 ```
 
 ## 📘 Usage
@@ -69,15 +69,6 @@ genesis run --language rust --path /path/to/your/project
 - `genesis run`: Start the interactive project setup
 - `genesis run --language <LANG> --path <PATH>`: Run with specific language and path
 - `genesis --help`: Show the help message with all available options
-
-<!-- ## 🏗 Project Templates
-
-Genesis uses the following starter templates:
-
-- Go: [go-project-starter](https://github.com/ThembinkosiThemba/go-project-starter.git)
-- Rust: [rust-project-starter](https://github.com/ThembinkosiThemba/rust-project-starter.git)
-
-These templates are carefully made to provide a solid starting point for your projects, incorporating best practices and common dependencies. -->
 
 ## 🤝 Contributing
 

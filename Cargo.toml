@@ -9,7 +9,7 @@ license = "MIT"
 homepage = "https://github.com/ThembinkosiThemba/genesis"
 repository = "https://github.com/ThembinkosiThemba/genesis"
 readme = "README.md"
-keywords = ["rust", "genesis"]
+keywords = ["rust", "genesis", "starter", "go", "generate", "engine"]
 include = ["src/**/*.rs", "Cargo.toml", "README.md"]
 
 [dependencies]
@@ -23,6 +23,7 @@ indicatif = "0.16.2"
 dirs = "4.0"
 walkdir = "2.3"
 toml_edit = "0.19"
+regex = "1.5.4"
 
 [[bin]]
 name = "genesis"

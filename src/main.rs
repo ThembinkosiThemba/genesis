@@ -6,6 +6,7 @@ use dirs::desktop_dir;
 use dotenv::dotenv;
 use git2::{build::RepoBuilder, Cred, FetchOptions, Progress, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
+use regex;
 use std::{
     cell::RefCell,
     fs,
@@ -18,7 +19,7 @@ use toml_edit::{Document, Item};
 use walkdir::WalkDir;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenv().ok(); // Load .env file
+    dotenv().ok();
     let term = Term::stdout();
     print_banner();
 
@@ -79,7 +80,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .with_prompt("(e.g., github.com/username/project)")
                     .interact_text()?)
             })?;
-            setup_go_project(&path, &project_name, &module_name)?
+            let database = prompt_database_selection(&term)?;
+            setup_go_project(&path, &project_name, &module_name, &database)?
         }
         "rust" => setup_rust_project(&path, &project_name)?,
         _ => println!(
@@ -197,6 +199,7 @@ fn setup_go_project(
     base_path: &str,
     project_name: &str,
     module_name: &str,
+    database: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", style("Setting up Go project...").yellow());
     println!();
@@ -223,6 +226,12 @@ fn setup_go_project(
         ),
     }
 
+    // Remove unused database folder
+    // remove_unused_database_folder(&project_path, database)?;
+
+    // Update main.go with the selected database
+    // update_main_go(&project_path, database)?;
+    update_database_config(&project_path, database)?;
     println!("{}", style("Running setup commands...").cyan());
     Command::new("go")
         .arg("mod")
@@ -362,10 +371,133 @@ fn update_cargo_toml(
     let mut file = fs::File::create(&cargo_toml_path)?;
     file.write_all(updated_content.as_bytes())?;
 
-    // println!("Updated project name in Cargo.toml");
     println!("{}", style("Updated project name in Cargo.toml!").green());
     Ok(())
 }
 
+fn prompt_database_selection(term: &Term) -> Result<String, Box<dyn std::error::Error>> {
+    prompt_step(term, "Choose your database:", || {
+        let options = &["MongoDB", "PostgreSQL"];
+        let selection = Select::with_theme(&ColorfulTheme::default())
+            .items(&options[..])
+            .default(0)
+            .interact_on(term)?;
+        Ok(options[selection].to_lowercase())
+    })
+}
+
+fn update_database_config(
+    project_path: &Path,
+    database: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    // Update main.go
+    let main_go_path = project_path.join("cmd").join("main.go");
+    if main_go_path.exists() {
+        let mut content = fs::read_to_string(&main_go_path)?;
+
+        let new_init_code = if database == "mongodb" {
+            r#"userRepo, err := config.InitializeRepositoriesMongo()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Initialize user usecase with MongoDB repository
+    userUsecase := config.InitializeUsecasesMongo(userRepo)"#
+        } else {
+            r#"userRepo, err := config.InitializeRepositoriesPostgres()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Initialize user usecase with PostgreSQL repository
+    userUsecase := config.InitializeUsecasesPostgres(userRepo)"#
+        };
+
+        let old_mongo_code = r#"userRepo, err := config.InitializeRepositoriesMongo()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Initialize user usecase with MongoDB repository
+    userUsecase := config.InitializeUsecasesMongo(userRepo)"#;
+
+        let old_postgres_code = r#"userRepo, err := config.InitializeRepositoriesPostgres()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Initialize user usecase with PostgreSQL repository
+    userUsecase := config.InitializeUsecasesPostgres(userRepo)"#;
+
+        if content.contains(old_mongo_code) || content.contains(old_postgres_code) {
+            content = content.replace(old_mongo_code, new_init_code);
+            content = content.replace(old_postgres_code, new_init_code);
+            fs::write(main_go_path, content)?;
+            println!(
+                "{}",
+                style("Updated main.go with selected database").green()
+            );
+        } else {
+            println!("{}", style("Couldn't find expected database initialization in main.go. Manual update may be required.").yellow());
+        }
+    } else {
+        println!(
+            "{}",
+            style("main.go not found in cmd directory. Skipping update.").yellow()
+        );
+    }
+
+    // Update user.go
+    let user_go_path = project_path
+        .join("internal")
+        .join("application")
+        .join("usecases")
+        .join("user")
+        .join("user.go");
+    if user_go_path.exists() {
+        let mut content = fs::read_to_string(&user_go_path)?;
+
+        let new_user_code = if database == "mongodb" {
+            r#"type UserUsecase struct {
+	userRepo mongodb.Interface
+}
+
+// NewUserUsecase creates a new UserUsecase instance.
+// It takes a mongodb.Interface as a parameter to handle database operations.
+func NewUserUsecase(repo mongodb.Interface) *UserUsecase {
+	return &UserUsecase{userRepo: repo}
+}"#
+        } else {
+            r#"type UserUsecase struct {
+	userRepo postgres.Interface
+}
+
+// NewUserUsecase creates a new UserUsecase instance.
+// It takes a postgres.Interface as a parameter to handle database operations.
+func NewUserUsecase(repo postgres.Interface) *UserUsecase {
+	return &UserUsecase{userRepo: repo}
+}"#
+        };
+
+        // let old_user_code_regex = regex::Regex::new(r"type UserUsecase struct \{[\s\S]*?func NewUserUsecase\([^)]*\) \*UserUsecase \{[\s\S]*?\}").unwrap();
+        let old_user_code_regex = regex::Regex::new(r"(?m)^type UserUsecase struct \{[\s\S]*?^func NewUserUsecase\([^)]*\) \*UserUsecase \{[\s\S]*?^\}").unwrap();
+        if old_user_code_regex.is_match(&content) {
+            content = old_user_code_regex
+                .replace_all(&content, new_user_code)
+                .to_string();
+            fs::write(user_go_path, content)?;
+            println!(
+                "{}",
+                style("Updated user.go with selected database").green()
+            );
+        } else {
+            println!("{}", style("Couldn't find expected UserUsecase struct in user.go. Manual update may be required.").yellow());
+        }
+    } else {
+        println!("{}", style("user.go not found. Skipping update.").yellow());
+    }
+
+    Ok(())
+}
 const RUST_URL: &str = "https://github.com/ThembinkosiThemba/rust-project-starter.git";
 const GO_URL: &str = "https://github.com/ThembinkosiThemba/go-project-starter.git";
