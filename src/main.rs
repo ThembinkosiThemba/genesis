@@ -252,8 +252,7 @@ fn update_module_name(
             match update_file_content(path, old_module_name, new_module_name) {
                 Ok(updated) => {
                     if updated {
-                        // println!("Updated module name in: {}", path.display());
-                        println!();
+                        println!("Updated module name in: {}", path.display());
                     }
                 }
                 Err(e) => println!("Error updating file {}: {}", path.display(), e),
