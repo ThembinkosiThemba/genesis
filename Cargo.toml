@@ -13,8 +13,8 @@ keywords = ["rust", "genesis", "starter", "go", "generate"]
 include = ["src/**/*.rs", "Cargo.toml", "README.md"]
 
 [dependencies]
-clap = { version = "3.0", features = ["derive"] }
-git2 = "0.16"
+clap = { version = "4.5.9", features = ["derive"] }
+git2 = "0.19.0"
 dialoguer = "0.10.0"
 colored = "2.0"
 console = "0.15.0"
@@ -24,6 +24,7 @@ dirs = "4.0"
 walkdir = "2.3"
 toml_edit = "0.19"
 regex = "1.5.4"
+shellexpand = "2.1.0"
 
 [[bin]]
 name = "genesis"

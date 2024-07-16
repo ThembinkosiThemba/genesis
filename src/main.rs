@@ -8,12 +8,14 @@ use crate::setup::setup_go_project;
 use crate::setup::setup_rust_project;
 use crate::utils::prompt_database_selection;
 
-use clap::{App, Arg};
+use clap::{Command, Arg};
 use colored::*;
 use console::{style, Term};
 use dialoguer::{theme::ColorfulTheme, Input, Select};
 use dirs::desktop_dir;
 use dotenv::dotenv;
+
+use std::path::PathBuf;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
@@ -26,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .expect("Desktop path is not valid UTF-8")
         .to_string();
 
-    let matches = App::new("Genesis")
+    let matches = Command::new("Genesis")
         .version("1.0.0")
         .author("Thembinkosi Mkhonta")
         .about("Sets up starter projects for Go or Rust")
@@ -36,7 +38,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .long("language")
                 .value_name("LANGUAGE")
                 .help("Sets the project language (go or rust)")
-                .takes_value(true),
         )
         .arg(
             Arg::new("path")
@@ -44,12 +45,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .long("path")
                 .value_name("PATH")
                 .help("Sets the path where the project will be cloned")
-                .default_value(&default_path)
-                .takes_value(true),
+                .default_value("~/Desktop")  // Use a default string literal
         )
         .get_matches();
 
-    let language = match matches.value_of("language") {
+    let language = match matches.get_one::<String>("language").map(|s| s.as_str()) {
         Some(lang) => lang.to_string(),
         None => prompt_step(&term, "Choose your project language:", || {
             let options = &["Go", "Rust"];
@@ -65,10 +65,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(Input::<String>::new().interact_text()?)
     })?;
 
+    // Parse the path after command-line arguments are processed
     let path = matches
-        .value_of("path")
-        .unwrap_or(&default_path)
-        .to_string();
+        .get_one::<String>("path")
+        .map(|s| PathBuf::from(shellexpand::tilde(s).into_owned()))
+        .unwrap_or_else(|| PathBuf::from(default_path));
 
     match language.as_str() {
         "go" => {
@@ -78,9 +79,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .interact_text()?)
             })?;
             let database = prompt_database_selection(&term)?;
-            setup_go_project(&path, &project_name, &module_name, &database)?
+            setup_go_project(path.to_str().unwrap(), &project_name, &module_name, &database)?
         }
-        "rust" => setup_rust_project(&path, &project_name)?,
+        "rust" => setup_rust_project(path.to_str().unwrap(), &project_name)?,
         _ => println!(
             "{}",
             style(format!("Unsupported language: {}", language)).red()
@@ -89,7 +90,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
-
 fn prompt_step<T>(
     term: &Term,
     prompt: &str,
