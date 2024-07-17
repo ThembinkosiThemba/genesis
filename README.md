@@ -1,32 +1,28 @@
-<h2 align="center">Genesis 🌱</h1>
-<h3 align="center">Genesis is a powerful, flexible, and user-friendly project starter tool designed for Go and Rust developers. It streamlines the initial setup process, allowing developers to focus on what truly matters: building great applications and solving business problems.</h3>
+<h2 align="start">Genesis 🌱</h1>
+<h3 align="start">Genesis is a powerful, flexible, and user-friendly project starter tool designed for Go and Rust developers. It streamlines the initial setup process, allowing developers to focus on what truly matters: building great applications and solving business problems.</h3>
 
-<p align="center">
-    <img src="./src/genesis.png" alt="genesis" />
+<p align="start">
+    <img src="./genesis.png" alt="genesis" />
 </p>
 
-## 🌟 Features
+## Get Started
 
-- **Quick Setup**: Rapidly initialize Go and Rust projects allowing you to select the database of your choice
-- **Interactive CLI**: User-friendly command-line interface for easy project configuration
-- **Language Selection**: Support for Go and Rust, with room for expansion
-- **Customizable Paths**: Flexibly set project locations
-- **Curated Templates**: Clone from carefully crafted starter repositories
-- **Automatic Dependency Management**: Run `go mod tidy` for Go and `cargo build` for Rust projects
-- **Cross-Platform**: Works seamlessly on Windows, macOS, and Linux
-- **Progress Visualization**: Clear progress bars for long-running operations
+```sh
+cargo install genesis_rs
+genesis -h
+```
 
 ## 🚀 Why Genesis?
 
-When developing software, setting up a new project can be a time-consuming and often frustrating process. Genesis solves this problem by:
+When developing software, setting up a new project can be a time-consuming and oftenly a frustrating process. Genesis solves this problem by:
 
-1. **Eliminating Boilerplate**: No more time wasted on repetitive setup tasks
-2. **Enforcing Best Practices**: Start with a solid foundation based on community standards
-3. **Reducing Decision Fatigue**: Curated project structures let you focus on your unique ideas
-4. **Accelerating Development**: Get to writing meaningful code faster
-5. **Ensuring Consistency**: Maintain uniformity across multiple projects
+- **Quick Setup and Interactive CLI**: Quickly initialize Go and Rust projects using your CLI for easy project configuration
+- **Language Support**: Support for Go and Rust, with room for expansion
+- **Customizable Paths**: Flexibly set project locations
+- **Automatic Dependency Management**: Run `go mod tidy` for Go and `cargo build` for Rust projects
+- **Cross-Platform**: Works on Windows, macOS, and Linux-based systems
 
-By handling the initial setup, Genesis allows developers to immediately dive into application core functionality and business logic, significantly reducing time-to-market for new ideas.
+By handling the initial setup, Genesis allows developers to immediately dive into application core functionality and business logic, significantly reducing time-to-market for new ideas.s
 
 ## 🛠 Installation
 
@@ -59,6 +55,7 @@ genesis run --language <LANG> --path /path/to/your/project
 ```
 
 For example:
+
 ```bash
 genesis run --language rust --path /path/to/your/project
 ```
@@ -70,7 +67,7 @@ genesis run --language rust --path /path/to/your/project
 - `genesis run --language <LANG> --path <PATH>`: Run with specific language and path
 - `genesis --help`: Show the help message with all available options
 
-## 🤝 Contributing
+<!-- ## 🤝 Contributing
 
 We welcome contributions to Genesis! Whether it's adding new features, improving documentation, or reporting bugs, your help is appreciated. Please feel free to:
 
@@ -78,16 +75,11 @@ We welcome contributions to Genesis! Whether it's adding new features, improving
 2. Fork the repository
 3. Send pull requests
 
-Check out our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+Check out our [Contributing Guidelines](CONTRIBUTING.md) for more details. -->
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-<!-- ## 🙏 Acknowledgments
-
-- Thanks to all contributors who have helped shape Genesis
-- Inspired by various project starter tools in the Go and Rust ecosystems -->
 
 ## 📞 Contact
 
