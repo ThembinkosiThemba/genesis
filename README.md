@@ -44,6 +44,11 @@ Simply run:
 genesis run
 ```
 
+You can update to the latest version of genesis by running:
+```bash
+genesis update
+```
+
 Follow the prompts to select your project language and specify the project name.
 
 ### Non-Interactive Mode

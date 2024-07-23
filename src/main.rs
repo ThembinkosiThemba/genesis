@@ -4,12 +4,10 @@ mod git;
 mod setup;
 mod utils;
 
-use crate::setup::setup_go_project;
-use crate::setup::setup_rust_project;
-use crate::utils::prompt_database_selection;
+use crate::setup::{setup_go_project, setup_rust_project, update_genesis};
+use crate::utils::{print_banner, prompt_database_selection, prompt_step};
 
-use clap::{Command, Arg};
-use colored::*;
+use clap::{Arg, Command};
 use console::{style, Term};
 use dialoguer::{theme::ColorfulTheme, Input, Select};
 use dirs::desktop_dir;
@@ -29,15 +27,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .to_string();
 
     let matches = Command::new("Genesis")
-        .version("1.0.0")
+        .version("1.2.0")
         .author("Thembinkosi Mkhonta")
-        .about("Sets up starter projects for Go or Rust")
+        .about("Sets up starter projects for Go and Rust")
+        .subcommand(Command::new("update").about("Updates genesis to the latest version"))
         .arg(
             Arg::new("language")
                 .short('l')
                 .long("language")
                 .value_name("LANGUAGE")
-                .help("Sets the project language (go or rust)")
+                .help("Sets the project language (go or rust)"),
         )
         .arg(
             Arg::new("path")
@@ -45,9 +44,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .long("path")
                 .value_name("PATH")
                 .help("Sets the path where the project will be cloned")
-                .default_value("~/Desktop")  // Use a default string literal
+                .default_value("~/Desktop"),
         )
         .get_matches();
+
+    if let Some(_) = matches.subcommand_matches("update") {
+        return update_genesis();
+    }
 
     let language = match matches.get_one::<String>("language").map(|s| s.as_str()) {
         Some(lang) => lang.to_string(),
@@ -79,7 +82,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .interact_text()?)
             })?;
             let database = prompt_database_selection(&term)?;
-            setup_go_project(path.to_str().unwrap(), &project_name, &module_name, &database)?
+            setup_go_project(
+                path.to_str().unwrap(),
+                &project_name,
+                &module_name,
+                &database,
+            )?
         }
         "rust" => setup_rust_project(path.to_str().unwrap(), &project_name)?,
         _ => println!(
@@ -89,55 +97,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     Ok(())
-}
-fn prompt_step<T>(
-    term: &Term,
-    prompt: &str,
-    input_fn: impl FnOnce() -> Result<T, Box<dyn std::error::Error>>,
-) -> Result<T, Box<dyn std::error::Error>> {
-    term.clear_last_lines(2)?;
-    println!("{}", style(prompt).cyan().bold());
-    let result = input_fn()?;
-    term.clear_last_lines(1)?;
-    println!();
-    println!();
-
-    println!("{} {}", style("✓").green().bold(), style(prompt).dim());
-    Ok(result)
-}
-
-fn print_banner() {
-    println!("{}", "\n".repeat(2));
-    println!(
-        "{}",
-        r#"   ______                      _     "#.bright_cyan()
-    );
-    println!(
-        "{}",
-        r#"  / ____/___  ____  ___  _____(_)____"#.bright_cyan()
-    );
-    println!(
-        "{}",
-        r#" / / __/ __ \/ __ \/ _ \/ ___/ / ___/"#.bright_cyan()
-    );
-    println!(
-        "{}",
-        r#"/ /_/ / /_/ / / / /  __(__  ) (__  ) "#.bright_cyan()
-    );
-    println!(
-        "{}",
-        r#"\____/\____/_/ /_/\___/____/_/____/  "#.bright_cyan()
-    );
-    println!("{}", "\n".repeat(2));
-    println!(
-        "{}",
-        "Welcome to Genesis - Your Project Starter!"
-            .bright_green()
-            .bold()
-    );
-    println!(
-        "{}",
-        "------------------------------------------".bright_green()
-    );
-    println!("{}", "\n".repeat(3));
 }

@@ -105,3 +105,28 @@ pub fn setup_rust_project(
     );
     Ok(())
 }
+
+pub fn update_genesis() -> Result<(), Box<dyn std::error::Error>> {
+    println!("{}", style("Checking for updates...").yellow());
+
+    let output = Command::new("cargo")
+        .args(&["install", "--force", "genesis_rs"])
+        .output()?;
+
+    if output.status.success() {
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        if stdout.contains("Replacing") {
+            println!(
+                "{}",
+                style("Update successful! Genesis has been updated to the latest version.").green()
+            );
+        } else {
+            println!("{}", style("Genesis is already up to date.").yellow());
+        }
+    } else {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        println!("Update failed. Error: {}", stderr);
+    }
+
+    Ok(())
+}

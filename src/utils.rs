@@ -4,8 +4,23 @@ use dialoguer::{theme::ColorfulTheme, Select};
 use regex;
 use std::{fs, io::Write, path::Path};
 use toml_edit::{Document, Item};
+use colored::*;
 
-use crate::prompt_step;
+pub fn prompt_step<T>(
+    term: &Term,
+    prompt: &str,
+    input_fn: impl FnOnce() -> Result<T, Box<dyn std::error::Error>>,
+) -> Result<T, Box<dyn std::error::Error>> {
+    term.clear_last_lines(2)?;
+    println!("{}", style(prompt).cyan().bold());
+    let result = input_fn()?;
+    term.clear_last_lines(1)?;
+    println!();
+    println!();
+
+    println!("{} {}", style("✓").green().bold(), style(prompt).dim());
+    Ok(result)
+}
 
 pub fn update_cargo_toml(
     project_path: &Path,
@@ -38,6 +53,42 @@ pub fn prompt_database_selection(term: &Term) -> Result<String, Box<dyn std::err
             .interact_on(term)?;
         Ok(options[selection].to_lowercase())
     })
+}
+
+pub fn print_banner() {
+    println!("{}", "\n".repeat(2));
+    println!(
+        "{}",
+        r#"   ______                      _     "#.bright_cyan()
+    );
+    println!(
+        "{}",
+        r#"  / ____/___  ____  ___  _____(_)____"#.bright_cyan()
+    );
+    println!(
+        "{}",
+        r#" / / __/ __ \/ __ \/ _ \/ ___/ / ___/"#.bright_cyan()
+    );
+    println!(
+        "{}",
+        r#"/ /_/ / /_/ / / / /  __(__  ) (__  ) "#.bright_cyan()
+    );
+    println!(
+        "{}",
+        r#"\____/\____/_/ /_/\___/____/_/____/  "#.bright_cyan()
+    );
+    println!("{}", "\n".repeat(2));
+    println!(
+        "{}",
+        "Welcome to Genesis - Your Project Starter!"
+            .bright_green()
+            .bold()
+    );
+    println!(
+        "{}",
+        "------------------------------------------".bright_green()
+    );
+    println!("{}", "\n".repeat(3));
 }
 
 pub fn update_database_config(
