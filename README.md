@@ -44,11 +44,6 @@ Simply run:
 genesis run
 ```
 
-You can update to the latest version of genesis by running:
-```bash
-genesis update
-```
-
 Follow the prompts to select your project language and specify the project name.
 
 ### Non-Interactive Mode
@@ -59,10 +54,10 @@ Specify the language and path directly:
 genesis run --language <LANG> --path /path/to/your/project
 ```
 
-For example:
+For example if you are using a Debian system:
 
 ```bash
-genesis run --language rust --path /path/to/your/project
+genesis run --language rust --path /home/user/Desktop
 ```
 
 ### Available Commands
@@ -70,17 +65,16 @@ genesis run --language rust --path /path/to/your/project
 - `genesis`: Display version and available commands
 - `genesis run`: Start the interactive project setup
 - `genesis run --language <LANG> --path <PATH>`: Run with specific language and path
+- `genesis update` : Update genesis to the latest version
 - `genesis --help`: Show the help message with all available options
 
-<!-- ## 🤝 Contributing
+## 🤝 Contributing
 
 We welcome contributions to Genesis! Whether it's adding new features, improving documentation, or reporting bugs, your help is appreciated. Please feel free to:
 
 1. Submit issues
 2. Fork the repository
 3. Send pull requests
-
-Check out our [Contributing Guidelines](CONTRIBUTING.md) for more details. -->
 
 ## 📄 License
 

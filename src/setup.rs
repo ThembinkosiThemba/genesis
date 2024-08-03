@@ -1,7 +1,7 @@
 use console::style;
 use std::{path::Path, process::Command};
 
-use crate::constants::{GO_URL, RUST_URL};
+use crate::constants::{GO_URL, OLD_MODULE_NAME, RUST_URL};
 use crate::file::update_module_name;
 use crate::git::clone_repo;
 use crate::utils::update_cargo_toml;
@@ -29,7 +29,7 @@ pub fn setup_go_project(
 
     let _repo = clone_repo(GO_URL, project_path.to_str().unwrap())?;
 
-    let old_module_name = "github.com/ThembinkosiThemba/go-project-starter";
+    let old_module_name = OLD_MODULE_NAME;
     match update_module_name(&project_path, old_module_name, module_name) {
         Ok(_) => println!("Module name updated successfully."),
         Err(e) => println!(
@@ -81,7 +81,7 @@ pub fn setup_rust_project(
     println!(
         "{}",
         style(format!(
-            "NOTE: This is still a basic cargo project. More changes will be made soon.",
+            "NOTE: Some changes have been made to the project. Check README for more info, or simple run `cargo build` and run.",
         ))
         .yellow()
     );
@@ -110,7 +110,7 @@ pub fn update_genesis() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", style("Checking for updates...").yellow());
 
     let output = Command::new("cargo")
-        .args(&["install", "--force", "genesis_rs"])
+        .args(&["install", "genesis_rs"])
         .output()?;
 
     if output.status.success() {

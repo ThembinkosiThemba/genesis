@@ -1,10 +1,10 @@
 use console::{style, Term};
 use dialoguer::{theme::ColorfulTheme, Select};
 
+use colored::*;
 use regex;
 use std::{fs, io::Write, path::Path};
 use toml_edit::{Document, Item};
-use colored::*;
 
 pub fn prompt_step<T>(
     term: &Term,
@@ -15,9 +15,6 @@ pub fn prompt_step<T>(
     println!("{}", style(prompt).cyan().bold());
     let result = input_fn()?;
     term.clear_last_lines(1)?;
-    println!();
-    println!();
-
     println!("{} {}", style("✓").green().bold(), style(prompt).dim());
     Ok(result)
 }
