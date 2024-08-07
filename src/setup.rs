@@ -1,4 +1,6 @@
 use console::style;
+use dialoguer::theme::ColorfulTheme;
+use dialoguer::Select;
 use std::{path::Path, process::Command};
 
 use crate::constants::{GO_URL, OLD_MODULE_NAME, RUST_URL};
@@ -67,6 +69,52 @@ pub fn setup_rust_project(
     println!();
 
     let project_path = Path::new(base_path).join(project_name);
+
+    let options = &["Basic Rust Project", "Full Starter template"];
+    let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Choose your Rust project type:")
+        .items(&options[..])
+        .default(0)
+        .interact()?;
+
+    match selection {
+        0 => setup_basic_rust_project(&project_path, project_name),
+        1 => setup_full_rust_project(&project_path, project_name),
+        _ => unreachable!(),
+    }
+}
+
+fn setup_basic_rust_project(
+    project_path: &Path,
+    project_name: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    println!("{}", style("Creating a basic Rust project...").cyan());
+
+    Command::new("cargo")
+        .arg("new")
+        .arg(project_path)
+        .status()?;
+
+    println!(
+        "{}",
+        style(format!(
+            "Basic Rust project '{}' created successfully!",
+            project_name
+        ))
+        .green()
+        .bold()
+    );
+    Ok(())
+}
+
+fn setup_full_rust_project(
+    project_path: &Path,
+    project_name: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    println!("{}", style("Setting up Rust project...").yellow());
+    println!();
+
+    // let project_path = Path::new(base_path).join(project_name);
     println!(
         "{}",
         style(format!(
@@ -130,3 +178,35 @@ pub fn update_genesis() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+// pub fn setup_basic_rust_project(
+//     base_path: &str,
+//     project_name: &str,
+// ) -> Result<(), Box<dyn std::error::Error>> {
+//     println!("{}", style("Creating basic cargo project").cyan());
+
+//     println!();
+
+//     let project_path = Path::new(base_path).join(project_name);
+//     println!(
+//         "{}",
+//         style(format!(
+//             "Setting up project on {}...",
+//             project_path.display()
+//         ))
+//         .cyan()
+//     );
+
+//     println!();
+
+//     Command::new("cargo")
+//         .arg("new")
+//         .arg(project_name)
+//         .current_dir(&project_path);
+
+//     println!(
+//         "{}",
+//         style("Rust project set up successfully!").green().bold()
+//     );
+//     Ok(())
+// }

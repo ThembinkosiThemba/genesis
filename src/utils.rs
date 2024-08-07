@@ -92,7 +92,6 @@ pub fn update_database_config(
     project_path: &Path,
     database: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // Update main.go
     let main_go_path = project_path.join("cmd").join("main.go");
     if main_go_path.exists() {
         let mut content = fs::read_to_string(&main_go_path)?;
