@@ -161,22 +161,24 @@ pub fn update_database_config(
         let new_user_code = if database == "mongodb" {
             r#"type UserUsecase struct {
 	userRepo mongodb.Interface
+    emails   *utils.EmailService
 }
 
 // NewUserUsecase creates a new UserUsecase instance.
 // It takes a mongodb.Interface as a parameter to handle database operations.
-func NewUserUsecase(repo mongodb.Interface) *UserUsecase {
-	return &UserUsecase{userRepo: repo}
+func NewUserUsecase(repo mongodb.Interface, emailService *utils.EmailService) *UserUsecase {
+	return &UserUsecase{userRepo: repo, emails: emailService}
 }"#
         } else {
             r#"type UserUsecase struct {
-	userRepo postgres.Interface
+	serRepo postgres.Interface
+    emails   *utils.EmailService
 }
 
 // NewUserUsecase creates a new UserUsecase instance.
 // It takes a postgres.Interface as a parameter to handle database operations.
-func NewUserUsecase(repo postgres.Interface) *UserUsecase {
-	return &UserUsecase{userRepo: repo}
+func NewUserUsecase(repo postgres.Interface, emailService *utils.EmailService) *UserUsecase {
+	return &UserUsecase{userRepo: repo, emails: emailService}
 }"#
         };
 

@@ -47,6 +47,7 @@ pub fn setup_go_project(
     // update_main_go(&project_path, database)?;
     update_database_config(&project_path, database)?;
     println!("{}", style("Running setup commands...").cyan());
+    
     Command::new("go")
         .arg("mod")
         .arg("tidy")
