@@ -1,6 +1,6 @@
 [package]
 name = "genesis_rs"
-version = "1.2.3"
+version = "2.0.0"
 authors = ["Thembinkosi Mkhonta (thembinkosimkhonta01@gmail.com)"]
 edition = "2021"
 
@@ -25,6 +25,7 @@ walkdir = "2.3"
 toml_edit = "0.19"
 regex = "1.5.4"
 shellexpand = "2.1.0"
+
 
 [[bin]]
 name = "genesis"

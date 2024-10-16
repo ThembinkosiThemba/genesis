@@ -1,13 +1,52 @@
 use console::style;
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
+use std::io;
 use std::{path::Path, process::Command};
 
-use crate::constants::{GO_URL, OLD_MODULE_NAME, RUST_URL};
+use crate::constants::{GO_URL, OLD_MODULE_NAME, REACT_VITE_TYPESCRIPT_URL, RUST_URL};
 use crate::file::update_module_name;
 use crate::git::clone_repo;
 use crate::utils::update_cargo_toml;
 use crate::utils::update_database_config;
+
+pub fn setup_react_ts_vite_project(
+    base_path: &str,
+    project_name: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    println!(
+        "{}",
+        style("Setting up react + Vite + Typescript project...").yellow()
+    );
+    println!();
+
+    let project_path = Path::new(base_path).join(project_name);
+    println!(
+        "{}",
+        style(format!(
+            "Cloning repository to {}...",
+            project_path.display()
+        ))
+        .cyan()
+    );
+    println!();
+
+    let _repo = clone_repo(REACT_VITE_TYPESCRIPT_URL, project_path.to_str().unwrap())?;
+
+    Command::new("npm")
+        .arg("install")
+        .arg("--legacy-peer-deps")
+        .current_dir(&project_path)
+        .status()?;
+
+    println!();
+
+    println!(
+        "{}",
+        style("React project set up successfully!").green().bold()
+    );
+    Ok(())
+}
 
 pub fn setup_go_project(
     base_path: &str,
@@ -47,13 +86,15 @@ pub fn setup_go_project(
     // update_main_go(&project_path, database)?;
     update_database_config(&project_path, database)?;
     println!("{}", style("Running setup commands...").cyan());
-    
+
     Command::new("go")
         .arg("mod")
         .arg("tidy")
         .current_dir(&project_path)
         .status()?;
     println!();
+
+    // let _ = remove_dot_git_dir(&project_path);
 
     println!(
         "{}",
@@ -95,6 +136,8 @@ fn setup_basic_rust_project(
         .arg("new")
         .arg(project_path)
         .status()?;
+
+    // let _ = remove_dot_git_dir(project_path);
 
     println!(
         "{}",
@@ -148,10 +191,21 @@ fn setup_full_rust_project(
         .current_dir(&project_path)
         .status()?;
 
+    // let _ = remove_dot_git_dir(project_path);
+
     println!(
         "{}",
         style("Rust project set up successfully!").green().bold()
     );
+    Ok(())
+}
+
+pub fn _remove_dot_git_dir(project_path: &Path) -> io::Result<()> {
+    Command::new("rm")
+        .arg("-rf")
+        .arg(".git")
+        .current_dir(&project_path)
+        .status()?;
     Ok(())
 }
 
@@ -179,35 +233,3 @@ pub fn update_genesis() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
-
-// pub fn setup_basic_rust_project(
-//     base_path: &str,
-//     project_name: &str,
-// ) -> Result<(), Box<dyn std::error::Error>> {
-//     println!("{}", style("Creating basic cargo project").cyan());
-
-//     println!();
-
-//     let project_path = Path::new(base_path).join(project_name);
-//     println!(
-//         "{}",
-//         style(format!(
-//             "Setting up project on {}...",
-//             project_path.display()
-//         ))
-//         .cyan()
-//     );
-
-//     println!();
-
-//     Command::new("cargo")
-//         .arg("new")
-//         .arg(project_name)
-//         .current_dir(&project_path);
-
-//     println!(
-//         "{}",
-//         style("Rust project set up successfully!").green().bold()
-//     );
-//     Ok(())
-// }

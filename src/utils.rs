@@ -77,15 +77,15 @@ pub fn print_banner() {
     println!("{}", "\n".repeat(2));
     println!(
         "{}",
-        "Welcome to Genesis - Your Project Starter!"
+        "Set up your projects in seconds using Genesis"
             .bright_green()
             .bold()
     );
     println!(
         "{}",
-        "------------------------------------------".bright_green()
+        "---------------------------------------------".bright_green()
     );
-    println!("{}", "\n".repeat(3));
+    println!("{}", "\n".repeat(1));
 }
 
 pub fn update_database_config(
