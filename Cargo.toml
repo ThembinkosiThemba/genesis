@@ -1,10 +1,10 @@
 [package]
 name = "genesis_rs"
-version = "2.0.0"
+version = "2.0.1"
 authors = ["Thembinkosi Mkhonta (thembinkosimkhonta01@gmail.com)"]
 edition = "2021"
 
-description = "Enabling developers with Genesis. Genesis is a powerful, flexible, and user-friendly project starter tool designed for Go and Rust developers. It streamlines the initial setup process, allowing developers to focus on what truly matters: building great applications and solving business problems."
+description = "Enabling developers with Genesis. Genesis is a simple, flexible, and user-friendly project starter tool designed for Go and Rust developers. It streamlines the initial setup process, allowing developers to focus on what truly matters: building great applications and solving business problems."
 license = "MIT"
 homepage = "https://github.com/ThembinkosiThemba/genesis"
 repository = "https://github.com/ThembinkosiThemba/genesis"
